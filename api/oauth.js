@@ -6,15 +6,12 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Mock "database" in memoria
 const authCodes = {};
 const accessTokens = {};
 
-// Config base (per Alexa)
 const CLIENT_ID = "stiga-client-id";
 const CLIENT_SECRET = "stiga-client-secret";
 
-// Pagina di login molto semplice (per demo)
 const loginPage = `
 <!DOCTYPE html>
 <html>
@@ -35,7 +32,6 @@ const loginPage = `
 </html>
 `;
 
-// GET /authorize
 app.get("/authorize", (req, res) => {
   const { client_id, redirect_uri, state, response_type } = req.query;
 
@@ -52,7 +48,6 @@ app.get("/authorize", (req, res) => {
   res.send(page);
 });
 
-// POST /login
 app.post("/login", (req, res) => {
   const { email, password, redirect_uri, state, client_id } = req.body;
 
@@ -78,7 +73,6 @@ app.post("/login", (req, res) => {
   res.redirect(url.toString());
 });
 
-// POST /token
 app.post("/token", (req, res) => {
   const {
     grant_type,
