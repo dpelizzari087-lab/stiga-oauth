@@ -5,6 +5,7 @@ const fetch = require("node-fetch");
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.text());
 
 // CONFIG ALEXA
 const CLIENT_ID = "stiga-client-id";
