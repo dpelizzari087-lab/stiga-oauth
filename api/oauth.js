@@ -39,7 +39,7 @@ const loginPage = `
 const authCodes = {};
 
 // 🔵 1) MOSTRARE LA PAGINA DI LOGIN
-app.get("/authorize", (req, res) => {
+app.get("/api/authorize", (req, res) => {
   const { client_id, redirect_uri, state, response_type } = req.query;
 
   if (client_id !== CLIENT_ID || response_type !== "code") {
@@ -56,7 +56,7 @@ app.get("/authorize", (req, res) => {
 });
 
 // 🔵 2) LOGIN → CHIAMATA A FIREBASE → OTTENERE idToken
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   const { email, password, redirect_uri, state, client_id } = req.body;
 
   if (client_id !== CLIENT_ID) {
@@ -105,7 +105,7 @@ app.post("/login", async (req, res) => {
 });
 
 // 🔵 3) ALEXA SCAMBIA IL CODE PER L’ACCESS TOKEN
-app.post("/token", (req, res) => {
+app.post("/api/token", (req, res) => {
   const { grant_type, code, client_id, client_secret } = req.body;
 
   if (client_id !== CLIENT_ID || client_secret !== CLIENT_SECRET) {
@@ -132,5 +132,5 @@ app.post("/token", (req, res) => {
   });
 });
 
+// ESPORTAZIONE PER VERCEL
 module.exports = (req, res) => app(req, res);
-
