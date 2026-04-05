@@ -118,7 +118,11 @@ try {
 app.post("/api/token", (req, res) => {
   console.log("TOKEN REQUEST BODY:", req.body);
   
-  const { grant_type, code, client_id, client_secret } = req.body;
+  let body = req.body;
+  if (typeof body === "string") {
+    body = Object.fromEntries(new URLSearchParams(body));
+  }
+  const { grant_type, code, client_id, client_secret } = body;
 
   if (client_id !== CLIENT_ID || client_secret !== CLIENT_SECRET) {
     return res.status(400).json({ error: "invalid_client" });
