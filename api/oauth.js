@@ -92,12 +92,22 @@ app.post("/api/login", async (req, res) => {
       createdAt: Date.now()
     };
 
-    // Redirect verso Alexa
-    const url = new URL(redirect_uri);
-    url.searchParams.set("code", code);
-    if (state) url.searchParams.set("state", state);
+    if (!redirect_uri) {
+  return res.status(400).send("Missing redirect_uri");
+}
 
-    res.redirect(url.toString());
+try {
+  const decodedRedirect = decodeURIComponent(redirect_uri);
+  const url = new URL(decodedRedirect);
+
+  url.searchParams.set("code", code);
+  if (state) url.searchParams.set("state", state);
+
+  res.redirect(url.toString());
+} catch (e) {
+  console.error("Redirect URI error:", e);
+  return res.status(400).send("Invalid redirect_uri");
+}
   } catch (err) {
     console.error(err);
     res.status(500).send("Errore interno");
