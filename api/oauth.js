@@ -116,12 +116,13 @@ try {
 
 // 🔵 3) ALEXA SCAMBIA IL CODE PER L’ACCESS TOKEN
 app.post("/api/token", (req, res) => {
-  console.log("TOKEN REQUEST BODY:", req.body);
-  
   let body = req.body;
+
+  // Alexa a volte manda il body come stringa
   if (typeof body === "string") {
     body = Object.fromEntries(new URLSearchParams(body));
   }
+
   const { grant_type, code, client_id, client_secret } = body;
 
   if (client_id !== CLIENT_ID || client_secret !== CLIENT_SECRET) {
@@ -137,7 +138,7 @@ app.post("/api/token", (req, res) => {
     return res.status(400).json({ error: "invalid_grant" });
   }
 
-  const accessToken = authData.token; // IL TOKEN REALE STIGA
+  const accessToken = authData.token;
 
   delete authCodes[code];
 
@@ -147,6 +148,7 @@ app.post("/api/token", (req, res) => {
     expires_in: 3600
   });
 });
+
 
 // ESPORTAZIONE PER VERCEL
 module.exports = (req, res) => app(req, res);
