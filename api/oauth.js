@@ -32,7 +32,7 @@ const loginPage = `
 </html>
 `;
 
-app.get("/authorize", (req, res) => {
+app.get("/api/authorize", (req, res) => {
   const { client_id, redirect_uri, state, response_type } = req.query;
 
   if (client_id !== CLIENT_ID || response_type !== "code") {
@@ -48,7 +48,7 @@ app.get("/authorize", (req, res) => {
   res.send(page);
 });
 
-app.post("/login", (req, res) => {
+app.post("/api/login", (req, res) => {
   const { email, password, redirect_uri, state, client_id } = req.body;
 
   if (!email || !password) {
@@ -73,7 +73,7 @@ app.post("/login", (req, res) => {
   res.redirect(url.toString());
 });
 
-app.post("/token", (req, res) => {
+app.post("/api/token", (req, res) => {
   const {
     grant_type,
     code,
@@ -110,4 +110,7 @@ app.post("/token", (req, res) => {
   });
 });
 
-module.exports = (req, res) => app(req, res);
+// 👇 QUESTA È LA PARTE FONDAMENTALE
+module.exports = (req, res) => {
+  app(req, res);
+};
