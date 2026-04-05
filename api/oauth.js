@@ -115,6 +115,8 @@ try {
 
 // 🔵 3) ALEXA SCAMBIA IL CODE PER L’ACCESS TOKEN
 app.post("/api/token", (req, res) => {
+  console.log("TOKEN REQUEST BODY:", req.body);
+  
   const { grant_type, code, client_id, client_secret } = req.body;
 
   if (client_id !== CLIENT_ID || client_secret !== CLIENT_SECRET) {
