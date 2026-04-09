@@ -109,6 +109,8 @@ try {
 });
 
 app.post("/api/token", (req, res) => {
+  console.log("TOKEN RAW BODY:", req.body);
+  console.log("TOKEN HEADERS:", req.headers);
   let body = req.body;
 
   if (typeof body === "string") {
