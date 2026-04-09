@@ -117,7 +117,16 @@ app.post("/api/token", (req, res) => {
     body = Object.fromEntries(new URLSearchParams(body));
   }
 
-  const { grant_type, code, client_id, client_secret } = body;
+  const { grant_type, code } = body;
+
+  let authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Basic ")) {
+    return res.status(400).json({ error: "invalid_client" });
+  }
+
+  const base64Credentials = authHeader.replace("Basic ", "");
+  const decoded = Buffer.from(base64Credentials, "base64").toString("utf8");
+  const [client_id, client_secret] = decoded.split(":");
 
   if (client_id !== CLIENT_ID || client_secret !== CLIENT_SECRET) {
     return res.status(400).json({ error: "invalid_client" });
