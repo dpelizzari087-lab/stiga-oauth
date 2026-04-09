@@ -3,9 +3,9 @@ const { v4: uuidv4 } = require("uuid");
 const fetch = require("node-fetch");
 
 const app = express();
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(express.text());
+app.use(express.text({ type: "*/*" }));
 
 const CLIENT_ID = "stiga-client-id";
 const CLIENT_SECRET = "stiga-client-secret";
@@ -110,8 +110,6 @@ try {
 
 app.post("/api/token", (req, res) => {
   let body = req.body;
-  console.log("TOKEN REQUEST BODY:", req.body);
-  console.log("HEADERS:", req.headers);
 
   if (typeof body === "string") {
     body = Object.fromEntries(new URLSearchParams(body));
