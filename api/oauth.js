@@ -7,11 +7,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.text());
 
-// CONFIG ALEXA
 const CLIENT_ID = "stiga-client-id";
 const CLIENT_SECRET = "stiga-client-secret";
 
-// PAGINA DI LOGIN (HTML)
 const loginPage = `
 <!DOCTYPE html>
 <html>
@@ -35,10 +33,8 @@ const loginPage = `
 </html>
 `;
 
-// DATABASE TEMPORANEO
 const authCodes = {};
 
-// 🔵 1) MOSTRARE LA PAGINA DI LOGIN
 app.get("/api/authorize", (req, res) => {
   const { client_id, redirect_uri, state, response_type } = req.query;
 
@@ -55,7 +51,6 @@ app.get("/api/authorize", (req, res) => {
   res.send(page);
 });
 
-// 🔵 2) LOGIN → CHIAMATA A FIREBASE → OTTENERE idToken
 app.post("/api/login", async (req, res) => {
   const { email, password, redirect_uri, state, client_id } = req.body;
 
@@ -83,9 +78,8 @@ app.post("/api/login", async (req, res) => {
       return res.status(401).send("Credenziali non valide");
     }
 
-    const idToken = data.idToken; // TOKEN REALE STIGA
+    const idToken = data.idToken;
 
-    // Creiamo un authorization code temporaneo
     const code = uuidv4();
     authCodes[code] = {
       token: idToken,
@@ -114,11 +108,11 @@ try {
   }
 });
 
-// 🔵 3) ALEXA SCAMBIA IL CODE PER L’ACCESS TOKEN
 app.post("/api/token", (req, res) => {
   let body = req.body;
+  console.log("TOKEN REQUEST BODY:", req.body);
+  console.log("HEADERS:", req.headers);
 
-  // Alexa a volte manda il body come stringa
   if (typeof body === "string") {
     body = Object.fromEntries(new URLSearchParams(body));
   }
@@ -149,6 +143,4 @@ app.post("/api/token", (req, res) => {
   });
 });
 
-
-// ESPORTAZIONE PER VERCEL
 module.exports = (req, res) => app(req, res);
